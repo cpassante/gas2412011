@@ -26,16 +26,18 @@ namespace nothinbutdotnetstore.tasks.startup
             Renderer renderer = new DefaultRenderer(template_registry);
             Catalog repository = new StubCatalog();
 
-            all_factories.Add(typeof(FrontController), new BasicDependencyFactory(() => default_front_controller));
-            all_factories.Add(typeof(RequestFactory), new BasicDependencyFactory(() => stub_request_factory));
-            all_factories.Add(typeof(CommandRegistry), new BasicDependencyFactory(() => default_command_registry));
-            all_factories.Add(typeof(TemplateRegistry), new BasicDependencyFactory(() => template_registry));
-            all_factories.Add(typeof(Renderer), new BasicDependencyFactory(() => renderer));
-            all_factories.Add(typeof(Catalog), new BasicDependencyFactory(() => repository));
+            add_factory<FrontController>(all_factories, () => default_front_controller);
+            add_factory<RequestFactory>(all_factories, () => stub_request_factory);
+            add_factory<CommandRegistry>(all_factories, () => default_command_registry);
+            add_factory<TemplateRegistry>(all_factories, () => template_registry);
+            add_factory<Renderer>(all_factories, () => renderer);
+            add_factory<Catalog>(all_factories, () => repository);
+            add_factory<ViewMainDepartments>(all_factories, () => new ViewMainDepartments(repository, renderer));
+        }
 
-            all_factories.Add(typeof(ViewMainDepartments), new BasicDependencyFactory(() =>
-                                                                                          new ViewMainDepartments(
-                                                                                          repository, renderer)));
+        public static void add_factory<T>(Dictionary<Type, DependencyFactory> dict, Func<object> factory)
+        {
+            dict.Add(typeof(T), new BasicDependencyFactory(factory));
         }
     }
 }
