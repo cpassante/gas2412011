@@ -14,5 +14,10 @@ namespace nothinbutdotnetstore.tasks.startup
             return new StartupCommandPipelineBuilder(new List<StartupCommand>()
                                                      , command_factory_provider());
         }
+
+        public static void by_running_all_commands_in(string startup_pipeline_txt)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

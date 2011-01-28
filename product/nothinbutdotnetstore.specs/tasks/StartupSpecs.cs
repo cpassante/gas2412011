@@ -1,3 +1,4 @@
+using System;
 using Machine.Specifications;
 using Machine.Specifications.DevelopWithPassion.Rhino;
 using nothinbutdotnetstore.infrastructure.containers;
@@ -10,19 +11,39 @@ namespace nothinbutdotnetstore.specs.tasks
     {
         public abstract class concern : Observes
         {
+            
         }
 
         [Subject(typeof(Startup))]
-        public class when_it_has_finished_running : concern
+        public class should_find_startup_command_from_name : concern
         {
-            Because b = () =>
-                Startup.run();
+            static string name = "SomeCommand";
 
-            It should_be_able_to_access_key_application_services = () =>
+            Establish e = () =>
             {
-                Container.fetch.a<FrontController>().ShouldNotBeNull();
-                Container.fetch.a<RequestFactory>().ShouldNotBeNull();
+                locator = new DefaultClassLocator();
             };
+
+            Because b = () =>
+            {
+                result = locator.find(name);
+            };
+
+            It should_find_correct_class = () =>
+            {
+                result.ShouldBeOfType(typeof(SomeCommand).FullName);
+            };
+
+            public static ClassLocator locator;
+            public static Type result;
+        }
+    }
+
+    public class SomeCommand : StartupCommand
+    {
+        public void run()
+        {
+            throw new NotImplementedException();
         }
     }
 }
